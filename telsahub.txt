@@ -1,0 +1,1645 @@
+if getgenv().TelsaLoaded then
+	require(game:GetService("ReplicatedStorage").Game.Notification).new({
+		Text = "Tesla is already loaded!",
+		Duration = 3
+	})
+	return
+end
+
+local blur = Instance.new("BlurEffect", game.Lighting)
+blur.Size = 0
+local ScreenGui = Instance.new("ScreenGui")
+local ImageLabel = Instance.new("ImageLabel")
+ScreenGui.Parent = game.CoreGui
+ImageLabel.Parent = ScreenGui
+ImageLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+ImageLabel.BackgroundTransparency = 1
+ImageLabel.Position = UDim2.new(0.5, -(303 / 2), 0.5, -(263 / 2))
+ImageLabel.Rotation = 0
+ImageLabel.Size = UDim2.new(0, 303,0, 263)
+ImageLabel.Image = "rbxassetid://4733685600"
+ImageLabel.ImageTransparency = 1
+
+for i = 1, 50, 2 do
+    blur.Size = i
+    ImageLabel.ImageTransparency = ImageLabel.ImageTransparency - 0.1
+    wait()
+end
+wait(0.1)
+
+for i = 1, 50, 2 do
+    blur.Size = 50 - i
+    ImageLabel.ImageTransparency = ImageLabel.ImageTransparency + 0.1
+    wait()
+end
+blur:Destroy()
+ScreenGui:Destroy()
+wait(0.05)
+getgenv().TelsaLoaded = true
+local getupvalues = debug.getupvalues
+local setupvalue = debug.setupvalue
+local getconstants = debug.getconstants
+local getupvalue = debug.getupvalue
+local getproto = getproto or debug.getproto
+local is_synapse_function = is_synapse_function or issentinelclosure or is_sirhurt_closure
+pcall(function()
+    local screnv = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript)
+    local real_pcall = screnv.pcall
+    screnv.pcall = function(f)
+        for _,v in next,getupvalues(f) do
+            if v == screnv then
+                for k2,v2 in next,getupvalues(f) do
+                    if v2==false then
+                        setupvalue(f,k2,true)
+                    end
+                end
+                screnv.pcall = real_pcall
+                break
+            end
+        end
+        return real_pcall(f)
+    end
+end)
+wait(0.2)
+local AllHashes = (function()
+	for i,v in pairs(getgc(true)) do
+		if type(v) == "table" then
+			for i2,v2 in pairs(v) do
+				if type(v2) == "string" and v2:sub(1,1) == "!" and v2:len() > 10 then
+				    return v
+				end
+			end
+		end
+	end
+end)()
+local GetOutCarHash = (function()
+	local const = {}
+	local con = (function()
+	    for i,v in pairs(getgc()) do
+    if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+        local con = getconstants(v)
+        if table.find(con, "LastVehicleExit") and table.find(con, "tick") then
+            return con
+        end
+    end
+end
+	end)()
+	for i,v in pairs(con) do
+		if i < table.find(con, "FireServer") and v~="sub" and v~="reverse" then
+			table.insert(const,v)
+		end
+	end
+	local go1 = tostring(const[1])
+	local go2 = tostring(const[tonumber(table.maxn(const))])
+	for i, v in pairs(AllHashes) do
+		if string.find(i, go1) and string.find(i, go2) then
+			return i
+		end
+	end
+end)()
+wait(0.1)
+local NitroHash = (function()
+	local nitroconst = {}
+	local con = (function()
+	    for i,v in pairs(getgc()) do
+		if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+			local con = getconstants(v)
+			if table.find(con, "NitroLoop") and table.find(con, "tick") then
+				return getconstants(getupvalue(v,3))
+			end
+		end
+	end
+	end)()
+	for i,v in pairs(con) do
+		if type(v) == "string" and i > table.find(con, "tick") and i < table.find(con, "FireServer") and v~="sub" and v~="reverse" then
+			table.insert(nitroconst,v)
+		end
+	end
+	local na = nitroconst[1]
+	local nb = nitroconst[table.maxn(nitroconst)]
+	for i, v in pairs(AllHashes) do
+		if string.find(i, na) and string.find(i, nb) then
+			return i
+		end
+	end
+end)()
+wait(0.1)
+local TouchTriggerHash = (function()
+	local touch = (function()
+		for i,v in pairs(getgc()) do
+			if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+				local con = getconstants(v)
+				if table.find(con, "tick") and table.find(con, "Name") and table.find(con, "FireServer") and table.maxn(con) < 15 then
+					return v
+				end
+			end
+		end
+	end)()
+	local touchconst = {}
+	for i, v in pairs(getconstants(touch)) do
+		if type(v) == "string" and v ~= "tick" and v ~= "Name" and v ~= "FireServer" and v ~= "sub" and v ~= "reverse" then
+			table.insert(touchconst, v)
+		end
+	end
+	local toucha = touchconst[1]
+	local touchb = touchconst[table.maxn(touchconst)]
+	for i, v in pairs(AllHashes) do
+		if string.find(i, toucha) and string.find(i, touchb) then
+			return i
+		end
+	end
+end)()
+wait(0.1)
+local EatHash = (function()
+	local con = getconstants(getproto(require(game:GetService("ReplicatedStorage").Game.Item.Donut).InputBegan, 1))
+	local dntconst = {}
+		for i,v in pairs(con) do
+		if i > table.find(con, "LastConsumed") and i < table.find(con, "FireServer") and v~= "sub" and v ~= "reverse" then
+			table.insert(dntconst, v)
+		end
+	end
+	local da = dntconst[1]
+	local db = dntconst[table.maxn(dntconst)]
+	for i, v in pairs(AllHashes) do
+		if string.find(i, da) and string.find(i, db) then
+			return i
+		end
+	end
+end)()
+wait(0.1)
+local TeamHash = (function()
+	local teama = (function()
+		for i, v in pairs(getgc()) do
+			if type(v) == "function" and getfenv(v).script == game:GetService("ReplicatedStorage").Game.TeamChooseUI then
+				local con = getconstants(v)
+				if table.find(con, "delay") and table.find(con, "assert") then
+					local aaabaea = getproto(v, 6)
+					return getconstants(aaabaea)
+				end
+			end
+		end
+	end)()
+	local tcon = {}
+	for i, v in pairs(teama) do
+		if type(v) == "string" and v ~= "Police" and v ~= "Prisoner" and v ~= "sub" and v ~= "reverse" and v ~= "assert" and v ~= "FireServer" then
+			table.insert(tcon, v)
+		end
+	end
+	local taa = tcon[1]
+	local tbb = tcon[table.maxn(tcon)]
+	for i, v in pairs(AllHashes) do
+		if string.find(i, taa) and string.find(i, tbb) then
+			return i
+		end
+	end
+end)()
+wait(0.1)
+local KickHash = (function()
+	for i,v in pairs(getgc(true)) do
+		if type(v) == "table" and rawget(v, "t") and rawget(v, "i") == 0.1 and type(rawget(v, "c")) == "function" then
+			local con = getconstants(v.c)
+			if table.find(con, "Eject") and table.find(con, "MouseButton1Down") then
+				local bruh = getproto(v.c,1)
+				local aaa = getconstants(bruh)
+				local Kcon2 = {}
+				for i, v in pairs(aaa) do
+					if type(v) == "string" and v ~= "FireServer" then
+						table.insert(Kcon2, v)
+					end
+				end
+				local ka = Kcon2[1]
+				local kb = Kcon2[table.maxn(Kcon2)]
+				for i, v in pairs(AllHashes) do
+					if string.find(i, ka) and string.find(i, kb) then
+						return i
+					end
+				end
+			end
+		end
+	end
+end)()
+wait(0.1)
+local Taz = (function()
+	local ta = getconstants(require(game:GetService("ReplicatedStorage").Game.Item.Taser).Tase)
+	local taa = {}
+	for i,v in pairs(ta) do
+		if i > table.find(ta, "GetPlayerFromCharacter") and i < table.find(ta, "Name") and v~= "sub" and v ~= "reverse" then
+			table.insert(taa, v)
+		end
+	end
+	local tb = taa[1]:sub(1,1)
+	local tc = taa[table.maxn(taa)]:sub(#taa[table.maxn(taa)], #taa[table.maxn(taa)])
+	for i,v in pairs(AllHashes) do
+		if string.find(i, tb) and string.find(i, tc) then
+			return i
+		end
+	end
+end)()
+local Hashes = {
+    ["KickVehicle"] = KickHash,
+    ["ModifyNitro"] = NitroHash,
+    ["EatDonut"] = EatHash,
+    ["GetOutCar"] = GetOutCarHash,
+    ["Taze"] = Taz, 
+	["TouchTrigger"] = TouchTriggerHash,
+	["ChangeTeam"] = TeamHash
+};
+local Remote
+local em
+local PlayFirework
+local gv
+for i, v in pairs(getreg()) do
+    if typeof(v) == "function" then
+        for i2, v2 in pairs(getupvalues(v)) do
+            if typeof(v2) == "table" and rawget(v2, "em") and rawget(v2, "Fireworks") then
+                em = v2.em
+				PlayFirework = v2.Fireworks
+				gv = v2.GetVehiclePacket
+                if(#getupvalues(v2.Event.FireServer) ~= 1) then
+                    game:GetService("Players").LocalPlayer:Kick("Nigga")
+                else
+                    Remote = v2.Event
+                end
+            end
+        end
+    end
+end
+local oldFS = getupvalue(Remote.FireServer, 1);
+setupvalue(Remote.FireServer, 1, function(...)
+    local args = {...}
+    if(getfenv(Remote.FireServer) ~= getfenv(2)) then
+		game:GetService("Players").LocalPlayer:Kick("no")
+    end
+    if args[2] and type(args[2] == "number") and string.find(tostring(debug.traceback()), "Falling") and _G.ARt then
+        return nil
+    end
+    return oldFS(...)
+end);
+local GuiFunc = (function()
+	for i, v in pairs(getgc()) do
+	if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+		local con = getconstants(v)
+		if table.find(con, "Punch") then
+			return v
+		end
+	end
+end
+end)()
+local PoliceFunction = (function()
+	for i, v in pairs(getgc()) do
+	if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+		local con = getconstants(v)
+		if table.find(con, "ShouldBreakout") and #con == 3 then
+			return v
+		end
+	end
+end
+end)()
+function punch(num)
+    getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript).tick = function() return 0/0 end
+    for i=1, num do
+        GuiFunc({Name = "Punch"}, true)
+    end
+    getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript).tick = tick
+end
+wait(0.2)
+local whitelisted = {}
+local Locations = {}
+local Stores = {}
+local Vehicles = {}
+local locations = {
+    Stores = {
+        {'Jewelry Out', CFrame.new(156.103851, 18.540699, 1353.72388)},
+        {'Jewelry In', CFrame.new(133.300705, 17.9375954, 1316.42407)},
+        {'Bank Out', CFrame.new(11.6854906, 17.8929214, 788.188171)},
+        {'Bank In', CFrame.new(24.6513691, 19.4347649, 853.291687)},
+        {'Museum Out', CFrame.new(1103.53406, 138.152878, 1246.98511)},
+        {'Museum In', CFrame.new(1071.72, 102.8, 1191.9)},
+        {'Donut Shop', CFrame.new(270.763885, 18.4229183, -1762.90149)},
+        {'Gas Station', CFrame.new(-1584.1051, 18.4732189, 721.38739)},
+    },
+
+    Locations = {
+        {'Prison Cells', CFrame.new(-1461.07605, -0.318537951, -1824.14917)},
+        {'Prison Yard', CFrame.new(-1219.36316, 17.7750931, -1760.8584)},
+        {'Prison Sewer', CFrame.new(-1050.70667, 0.7002424, -1498.72766)},
+        {'Prison Parking', CFrame.new(-1173.36951, 18.698061, -1533.47656)},
+        {'Gun Shop', CFrame.new(-27.8670673, 17.7929249, -1774.66882)},
+        {'1M Shop', CFrame.new(388.804688, 17.5929279, -1701.1698)},
+        {'Volcano Base', CFrame.new(1726.72266, 50.4146309, -1745.76196)},
+        {'City Base', CFrame.new(-244.824478, 17.8677788, 1573.81616)},
+        {'Police HQ1', CFrame.new(-1134.69604, 17.9251575, -1586.79395)},
+        {'Police HQ2', CFrame.new(738.103577, 38.1275024, 1134.48059)},
+        {'Military Base', CFrame.new(766.283386, 18.0144463, -324.15921)},
+        {'Evil Lair', CFrame.new(1735.52405, 18.1646328, -1726.05249)},
+        {'Secret Agent Base', CFrame.new(1506.60754, 69.8824005, 1634.42456)},
+        {'Garage', CFrame.new(-336.791779, 18.2407684, 1137.49451)},
+        {'Glider Shop', CFrame.new(137.43399, 18.1547852, -1768.24658)},
+        {'Factory', CFrame.new(691.559326, 37.6575089, 2362.05591)},
+        {'Lookout', CFrame.new(1328.05725, 166.614426, 2609.93457)},
+		{'Airport', CFrame.new(-1227.47449, 64.4552231, 2787.64233)},
+		{'Boat Cave', CFrame.new(1870.72498, 31.4386101, 1896.98865)},
+		{'Port', CFrame.new(-423.029663, 21.2136765, 2023.55713)},
+		{'Volcano Inside', CFrame.new(1704.46484, 25.0370979, -1775.46484)},
+    },
+
+    Vehicles = {
+        {'Prison Camaro', CFrame.new(-951.755493, 18.5451126, -1446.42664)},
+        {'Lamborghini', CFrame.new(146.728821, 17.5929279, 774.655396)},
+        {'Bugatti', CFrame.new(241.109451, 17.6066723, 1362.49316)},
+        {'McLaren', CFrame.new(597.850708, 37.712925, 1649.81897)},
+        {'Pickup Truck', CFrame.new(-1543.02686, 18.3732185, 721.518494)},
+        {'Model3', CFrame.new(-117.721481, 17.5907402, 547.516052)},
+        {'Mini Cooper', CFrame.new(760.116577, 17.8929214, -1228.13806)},
+        {'Dirtbike', CFrame.new(1643.61707, 18.8864899, 233.026291)},
+        {'SUV', CFrame.new(-1066.26172, 18.6751556, -1476.00732)},
+        {'Dune Buggy', CFrame.new(580.013916, 17.1554928, -458.795807)},
+        {'ATV', CFrame.new(-1452.651, 24.8182373, 202.176361)},
+        {'Mustang', CFrame.new(-97.1472931, 18.2549458, -1724.10986)},
+        {'Porsche', CFrame.new(1111.16809, 101.783577, 1296.94312)},
+        {'Ambulance', CFrame.new(-139.396881, 18.1840897, 1098.80212)},
+        {'UFO', CFrame.new(775.515747, 18.3745003, -142.552948)},
+        {'SWAT Van', CFrame.new(-1356.85388, 17.9232101, -1534.93152)},
+        {'Wraith', CFrame.new(1687.08911, 50.4146309, -1704.4657)},
+        {'Ferrari', CFrame.new(-1500.52051, 49.4602127, 1804.38611)},
+        {'Classic', CFrame.new(1194.28406, 106.283951, 1176.69458)},
+        {'Audi R8', CFrame.new(1714.05151, 18.646801, -1691.49756)},
+        {'Raptor', CFrame.new(1520.34692, 73.6122742, 1741.82507)},
+        {'Police Motorcycle', CFrame.new(718.890076, 38.3909264, 1072.3656)},
+        {'Firetruck', CFrame.new(-967.847168, 33.1665268, 1320.79968)},
+        {'Jet Skis', CFrame.new(-505.554657, 18.6864834, 812.503174)},
+    },
+}
+for i,v in pairs(locations.Stores) do
+	table.insert(Stores, v[1])
+end
+for i,v in pairs(locations.Locations) do
+	table.insert(Locations, v[1])
+end
+for i,v in pairs(locations.Vehicles) do
+	table.insert(Vehicles, v[1])
+end
+wait(0.1)
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/linsonder6/Tesla/master/UiLib.lua"))();
+local tptab = library:CreateSection("Teleports");
+wait(0.2)
+function TP(cframe)
+	if gv() then
+		if gv().Model.Name ~= "Volt" or gv.Model.Name ~= "Patrol" then
+			gv().Model:SetPrimaryPartCFrame(cframe);
+			return
+		else
+			game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = cframe
+			return
+		end
+	else
+		Remote:FireServer(Hashes["GetOutCar"])
+		game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = cframe
+		return
+	end
+end
+tptab:Box("Teleport Player", function(callback)
+	for i,v in next, game:GetService("Players"):GetPlayers() do
+		if string.find(string.lower(v.Name), string.lower(tostring(callback)))  then
+			TP(v.Character.HumanoidRootPart.CFrame)
+		end
+	end
+end)
+tptab:Dropdown("Store Teleports", Stores, function(selected)
+	for i,v in pairs(locations.Stores) do
+		if v[1] == tostring(selected) then
+			TP(v[2])
+		end
+	end
+end);
+tptab:Dropdown("Location Teleports", Locations, function(selected)
+	for i,v in pairs(locations.Locations) do
+		if v[1] == tostring(selected) then
+			TP(v[2])
+		end
+	end
+end);
+tptab:Dropdown("Vehicle Teleports", Vehicles, function(selected)
+	for i,v in pairs(locations.Vehicles) do
+		if v[1] == tostring(selected) then
+			TP(v[2])
+		end
+	end
+end);
+wait(0.2)
+local playertab = library:CreateSection("Player")
+_G.WalkSpeed = 16
+playertab:Slider("Walkspeed", { min = 16, max = 500 }, function(callback)
+	_G.WalkSpeed = tonumber(callback)
+end)
+playertab:Slider("Jump Power", { min = 16, max = 200 }, function(callback)
+	game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = tonumber(callback)
+end)
+playertab:Toggle("No Wait", function(arg)
+	_G.NWt = arg
+end)
+
+local Doors = {}
+for i,v in pairs(getgc(true)) do
+	if type(v) == "table" and rawget(v, "OpenFun") and rawget(v, "State") then
+		table.insert(Doors,v)
+	end
+end
+local Opendoor = (function()
+	for i, v in pairs(getgc()) do
+	if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+		local con = getconstants(v)
+		if table.find(con, "SequenceRequireState") then
+			return v
+		end
+	end
+end
+end)()
+playertab:Toggle("Open All Doors", function(arg)
+	_G.OADt = arg
+end)
+
+playertab:Toggle("No Clip", function(arg)
+	_G.NCt = arg
+end)
+game:GetService("RunService").Stepped:Connect(function()
+	if _G.NCt then
+		game:GetService("Players").LocalPlayer.Character.Humanoid:ChangeState(11)
+	end
+end)
+local breakouta = getupvalue(PoliceFunction,3,true)
+local BreakOut = getupvalue(breakouta,2,true)
+playertab:Toggle("Anti Arrest", function(arg)
+	_G.AAt = arg
+end)
+playertab:Toggle("One Punch Man", function(arg)
+	_G.OPMt = arg
+end)
+game:GetService("UserInputService").InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if input.KeyCode == Enum.KeyCode.F and _G.OPMt then
+		punch(20)
+	end
+end)
+playertab:Toggle("Eject All", function(arg)
+	_G.AEAt = arg
+end)
+wait(0.1)
+require(game:GetService("ReplicatedStorage").Game.ItemSystem.ItemSystem).Fake = function() return end
+local Unequip = (function()
+	for i,v in pairs(getgc()) do
+		if type(v) == "function" and getfenv(v).script == game:GetService("ReplicatedStorage").Game.Inventory then
+			local con = getconstants(v)
+			if table.find(con, "GetLocalVehiclePacket") then
+				return v
+			end
+		end
+	end
+end)()
+playertab:Toggle("God Mode", function(arg)
+	_G.GMt = arg
+	if _G.GMt then
+		setconstant(Unequip,12,"Fake")
+	else
+		setconstant(Unequip,12,"Unequip")
+	end
+end)
+local Falling
+for i,v in next, getgc(true) do
+	if type(v) == "table" and rawget(v, 'Ragdoll') and rawget(v, 'Unragdoll') then
+		Falling = v
+	end
+end
+local oldRagdoll = Falling.Ragdoll
+Falling.Ragdoll = function(...)
+	if _G.ARt then
+		return wait(9e9)
+	else
+		return oldRagdoll(...)
+	end
+end
+wait(0.1)
+playertab:Toggle("Anti Ragdoll", function(arg)
+	_G.ARt = arg
+end)
+playertab:Toggle("No Team Switch Cooldown", function(arg)
+	_G.NTSCt = arg
+	if _G.NTSCt then
+		require(game:GetService("ReplicatedStorage").Resource.Settings).Time.BetweenTeamChange = 0
+	else
+		require(game:GetService("ReplicatedStorage").Resource.Settings).Time.BetweenTeamChange = 24
+	end
+end)
+playertab:Toggle("No Cell Time", function(arg)
+	_G.NCet = arg
+	if _G.NCet then
+		require(game:GetService("ReplicatedStorage").Resource.Settings).Time.Cell = 0
+	else
+		require(game:GetService("ReplicatedStorage").Resource.Settings).Time.Cell = 20
+	end
+end)
+wait(0.1)
+function TouchTrigger(name)
+	for i,v in pairs(getgc(true)) do
+		if type(v) == "table" and rawget(v, "Part") and rawget(v, "Fun") then
+			if type(v.Fun) == "function" then
+				if tostring(v.Part) == name then
+					return v.Fun
+				end
+			end
+		end
+	end
+end
+playertab:Button("Give JetPack", function()
+	TouchTrigger("JetPackGiver")()
+end)
+playertab:Button("Inf JetPack Fuel", function()
+	local bruh = {}
+	for i,v in next, debug.getupvalues(require(game.ReplicatedStorage.Game.JetPack.JetPack).Init) do
+		if typeof(v) == "table" then
+			if v.Equip then
+				bruh = v
+				break
+			end
+		end
+	end
+	bruh.LocalMaxFuel = math.huge
+	bruh.LocalFuel = math.huge
+	bruh.LocalFuelType = "Rocket"
+end)
+
+playertab:Button("Take Gun When Flying", function()
+	local jp = require(game:GetService("ReplicatedStorage").Game.JetPack.JetPack)
+	jp.IsFlying = function(...)
+		return false
+	end
+end)
+wait(0.1)
+local pickpocketa = getupvalue(PoliceFunction,2,true)
+local PickPocket = getupvalue(pickpocketa,2,true)
+playertab:Button("PickPocket", function()
+	local ogpos = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+	for i,v in pairs(game:GetService('Players'):GetPlayers()) do
+		if tostring(v.Team) == "Police" then
+			if v.Character:FindFirstChild("HumanoidRootPart") then
+				if not v.Character:FindFirstChild("InVehicle") then
+					TP(v.Character.HumanoidRootPart.CFrame)
+					wait(0.5)
+					for count = 1, 10 do
+						PickPocket(v)
+					end
+					wait()
+					TP(ogpos)
+					return
+				end
+			end
+		end
+	end
+end)
+playertab:Dropdown("Change Team", {"Prisoner", "Police"}, function(callback)
+	Remote:FireServer(Hashes["ChangeTeam"], tostring(callback))
+end)
+wait(0.1)
+local vehicle = library:CreateSection("Vehicle")
+_G.SBc = 1
+_G.STSc = 1
+_G.SHc = 3
+_G.SESc = 3
+_G.SHMFHc = 200
+vehicle:Box("Engine Speed", function(callback)
+	_G.SESc = tonumber(callback)
+	gv().GarageEngineSpeed = tonumber(_G.SESc)
+end)
+vehicle:Box("Height", function(callback)
+	_G.SHc = tonumber(callback)
+	gv().Height = tonumber(_G.SHc)
+end)
+vehicle:Box("Turn Speed", function(callback)
+	_G.STSc = tonumber(callback)
+	gv().TurnSpeed = tonumber(_G.STSc)
+end)
+vehicle:Box("Brake", function(callback)
+	_G.SBc = tonumber(callback)
+	gv().GarageBrakes = tonumber(_G.SBc)
+end)
+vehicle:Button("Reset Car", function()
+	_G.SBc = 1
+	_G.STSc = 1
+	_G.SHc = 3
+	_G.SESc = 3
+	_G.SHMFHc = 200
+end)
+local UpdatePrePhysicsFunction = require(game:GetService("ReplicatedStorage").Module.AlexChassis).UpdatePrePhysics
+require(game:GetService("ReplicatedStorage").Module.AlexChassis).UpdatePrePhysics = function(Argument_1, Argument_2)
+	Argument_1.GarageBrakes = tonumber(_G.SBc)
+	Argument_1.TurnSpeed = tonumber(_G.STSc)
+	Argument_1.GarageEngineSpeed = tonumber(_G.SESc)
+	Argument_1.Height = tonumber(_G.SHc)
+	return UpdatePrePhysicsFunction(Argument_1, Argument_2)
+end
+_G.FSpeed = 50
+function sendn(title, text, time)
+	game.StarterGui:SetCore("SendNotification", {
+		Title = title;
+		Text = text; 
+		Duration = time; 
+	})
+end
+function SendN(text,time)
+	require(game:GetService("ReplicatedStorage").Game.Notification).new({
+		Text = text,
+		Duration = time
+	})
+end
+vehicle:Button("Car Fly", function()
+	local x = game:GetService("Players").LocalPlayer:GetMouse()
+local z = workspace.CurrentCamera
+function FlyPart(ak, al)
+    local am = Instance.new("Folder")
+    am.Name = "Storage"
+    for E, an in pairs(ak:GetChildren()) do
+        if an:IsA("BodyGyro") then
+            an.Parent = am
+        end
+    end
+    local ao = Instance.new("BodyPosition", ak)
+    ao.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    ao.Name = "Position"
+    local ap = Instance.new("BodyGyro", ak)
+    ap.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+    ap.Name = "Rotate"
+    z.CameraSubject = ak
+    local aq = 0
+    local ar = x.KeyDown:Connect(function(as)
+        if as == "w" then
+            if al then
+                aq = _G.FSpeed
+            else
+                aq = tonumber("-" .. tostring(_G.FSpeed))
+            end
+        elseif as == "s" then
+            if al then
+                aq = tonumber("-" .. tostring(_G.FSpeed))
+            else
+                aq = _G.FSpeed
+            end
+        end
+    end)
+    x.KeyUp:Connect(function(as)
+        if as == "w" then
+            aq = 0
+        elseif as == "s" then
+            aq = 0
+        end
+    end)
+    local at = {}
+    at.IsRunning = true
+    at.Part = ak
+    at.Storage = am
+    at.MT = ar
+    spawn(function()
+        repeat
+            local au = z.CFrame
+            local av = ak.Position
+            local aw = (av - au.p).Magnitude
+            ao.Position = (au * CFrame.new(0, 0, tonumber("-" .. tostring(aw)) + aq)).p + Vector3.new(0, 0.2225, 0)
+            ap.CFrame = au
+            wait()
+        until at.IsRunning == false or z.CameraSubject ~= ak
+        ao:Remove()
+        ap:Remove()
+        for E, ax in pairs(at.Storage:GetChildren()) do
+            ax.Parent = at.Part
+        end
+        at.MT:Disconnect()
+        at.Storage:Remove()
+    end)
+    return at
+end
+local A = workspace.Vehicles
+function GetVehicleMain()
+    local ai = game:GetService("Players").LocalPlayer.Name
+    for E, aj in pairs(A:GetChildren()) do
+        if aj:FindFirstChild("Seat") and aj.Seat:FindFirstChild("PlayerName") and aj:FindFirstChild("Engine") then
+            if aj.Seat.PlayerName.Value == ai then
+                return aj.Engine, false
+            end
+        elseif aj:FindFirstChild("Seat") and aj.Seat:FindFirstChild("PlayerName") and aj:FindFirstChild("Model") then
+            if aj.Seat.PlayerName.Value == ai then
+                if aj.Model:FindFirstChild("Body") then
+                    return aj.Model.Body, true
+                end
+            end
+        end
+    end
+end
+    if GetVehicleMain() ~= nil then
+        SendN("Vehicle Fly Enabled", 2)
+        local az, al = GetVehicleMain()
+        local aA = FlyPart(az, al)
+        if al then
+            repeat
+                wait()
+            until az.Parent.Parent.Seat.PlayerName.Value ~= d.Name
+        else
+            repeat
+                wait()
+            until az.Parent.Seat.PlayerName.Value ~= game:GetService("Players").LocalPlayer.Name
+        end
+        wait(0.1)
+        z.CameraSubject = N
+        SendN("Vehicle Fly Disabled", 2)
+    else
+        SendN("Vehicle Not Found", 2)
+    end
+end)
+vehicle:Slider("Fly Speed", {min = 25, max = 500, precise = 50}, function(x)
+	_G.FSpeed = tonumber(x)
+end)
+vehicle:Toggle("Anti Flip Over", function(arg)
+	_G.AFOt = arg
+end)
+wait(0.1)
+local GarageF
+for i,v in pairs(getgc()) do
+    if type(v) == "function" and getfenv(v).script == game:GetService("ReplicatedStorage").Game.Garage.GarageUI then
+        for i2,v2 in pairs(getconstants(v)) do
+            if tostring(v2) == "UserOwnsGamePassAsync" then
+                GarageF = v
+            end
+        end
+    end
+end
+vehicle:Toggle("Mobile Garage", function(arg)
+	debug.setupvalue(GarageF,5,arg)
+end)
+vehicle:Toggle("Elon Musk Mode", function(arg)
+	_G.isAPon = arg
+	local tesla = require(game:GetService("ReplicatedStorage").Module.AlexChassis).OnAction
+	game:GetService("RunService").RenderStepped:Connect(function()
+		if debug.getupvalue(tesla,8) == false and _G.isAPon == true then
+			debug.setupvalue(tesla,8,true)
+		elseif debug.getupvalue(tesla,8) == true and _G.isAPon == false then 
+			debug.setupvalue(tesla,8,false)
+		end
+	end)
+end)
+vehicle:Toggle("Injan Horn", function(arg)
+	local id = game:GetService("Players").LocalPlayer.UserId
+	require(game:GetService("ReplicatedStorage").Resource.Settings).Perm.InjanHorn.Id[tostring(id)] = arg
+end)
+local modifyCar = (function()
+	local a = require(game:GetService("ReplicatedStorage").Game.Garage.GarageUI).Init 
+	local b = getproto(a,1)
+	local c = getconstants(b)
+	for i,v in pairs(getgc()) do
+		if type(v) == "function" and getfenv(v).script == game:GetService("ReplicatedStorage").Game.Garage.GarageUI then
+			local con = getconstants(v)
+			if unpack(con) == unpack(c) then
+				return v
+			end
+		end
+	end
+end)()
+wait(0.1)
+local Colors = {'Yellow', 'White', 'Chrome', 'Blue', 'Green', 'Red', 'Matte', 'Black', 'Grey', 'Orange', 'Pink', 'Cyan', 'Forest Green', 'Purple', 'Pastel Green', 'Pastel Violet', 'Pastel Blue', 'Pastel Gray', 'Pastel Pink', 'Pastel Yellow', 'Pastel Orange', 'Pastel Brown', 'Sand', 'Hot Orange', 'Fall Chrome', 'Super Lime', 'Gold', 'Deep Purple', ''}
+vehicle:Toggle("Rainbow Car (Server Sided)", function(arg)
+	_G.RCSSt = arg
+	while _G.RCSSt and wait(0.2) do
+		local color = Colors[math.random(1, #Colors)]
+		modifyCar({ Name = color }, { Name = "BodyColor" })
+		modifyCar({ Name = color }, { Name = "WindowColor" })
+		modifyCar({ Name = color }, { Name = "SpoilerColor" })
+		modifyCar({ Name = color }, { Name = "WheelColor" })
+		modifyCar({ Name = color }, { Name = "SecondBodyColor" })
+		modifyCar({ Name = color }, { Name = "Glow" })
+		modifyCar({ Name = color }, { Name = "HeadlightsColor" })
+    end
+end)
+
+function zigzag(X) return math.acos(math.cos(X*math.pi))/math.pi end
+vehicle:Toggle("Rainbow Car (Client Sided)", function(arg)
+	_G.RCt = arg
+end)
+vehicle:Toggle("Rainbow Nitro (Client Sided)", function(arg)
+	_G.RNt = arg
+end)
+
+vehicle:Button("Inf Nitro SS", function()
+	Remote:FireServer(Hashes["ModifyNitro"], -math.huge)
+end)
+wait(0.1)
+local spawnvehicle
+for i, v in pairs(getgc(true)) do
+	if typeof(v) == "function" and islclosure(v) and not is_synapse_function(v) and getfenv(v).script == game:GetService("ReplicatedStorage").Game.Garage.GarageUI then
+		for i2, v2 in pairs(getconstants(v)) do
+			if tostring(v2) == "Type" then
+				for i3,v3 in pairs(getconstants(v)) do
+					if tostring(v3) == "Make" then
+						for i4,v4 in pairs(getconstants(v)) do
+							if tostring(v4) == "FireServer" then
+								spawnvehicle = v
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end
+local vData = {}
+for i,v in pairs(require(game:GetService("ReplicatedStorage").Game.Garage.VehicleData)) do
+	if not rawget(v, "NoGarageSpawn") then
+		table.insert(vData, v.Make)
+	end
+end
+vehicle:Dropdown("Spawn Vehicle", vData, function(selected)
+	for i,v in pairs(require(game:GetService("ReplicatedStorage").Game.Garage.VehicleData)) do
+		if tostring(v.Make) == tostring(selected) then
+			spawnvehicle(v)
+		end
+	end
+end)
+wait(0.2)
+local combatab = library:CreateSection("Combat")
+local Getgun = (function()
+    for i,v in pairs(getgc()) do
+    if type(v) == "function" and getfenv(v).script == game:GetService("ReplicatedStorage").Game.GunShop then
+        local con = getconstants(v)
+        if table.find(con, "CanGrab") and table.find(con, "FireServer") then
+            return v
+        end
+    end
+end
+end)()
+combatab:Button("Grab All Guns", function()
+	fireclickdetector(workspace.Givers.Guns.ClickDetector)
+	local children = workspace.Givers:GetChildren()
+	for i, child in ipairs(children) do
+		if child.Item.Value == "Revolver" then
+			fireclickdetector(child.ClickDetector)
+		break
+		end
+	end
+	local guns = { "AK47", "Uzi", "RocketLauncher", "Shotgun", "Pistol", "PlasmaPistol", "Revolver", "Rifle", "Sniper", "Taser", "ForcefieldLauncher", "Flintlock", "Grenade" }
+	for i,v in pairs(guns) do
+		Getgun({ Part = { Parent = { Name = v } }, CanGrab = true }, true)
+	end
+end)
+combatab:Toggle("Taze All", function(arg)
+	_G.TAt = arg
+end)
+combatab:Toggle("Taze Aura", function(arg)
+	_G.TAut = arg
+end)
+
+combatab:Button("Gun Mods", function()
+	for i,v in pairs(game:GetService("ReplicatedStorage").Game.ItemConfig:GetChildren()) do
+		local cst = require(v)
+		cst.CamShakeMagnitude = 0
+		cst.MagSize = math.huge
+		cst.ReloadTime = 0
+		cst.FireAuto = true
+		cst.FireFreq = 9999
+	end
+end)
+local farming = library:CreateSection("Farming")
+farming:Button("Rob Small Stores", function()
+	for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+		if v.Name == "Rob" then
+			v:Callback(v, true)
+		end
+	end
+end)
+_G.BankRobbed = nil
+_G.JewRobbed = nil
+_G.MusRobbed = nil
+_G.TrainRobbed = nil
+spawn(function()
+	while wait(2) do
+		if workspace.Banks:GetChildren()[1].Extra.Sign.Decal.Transparency == 0 then
+			_G.BankRobbed = false
+		end
+		if workspace.Jewelrys:GetChildren()[1].Extra.Sign.Decal.Transparency == 0 then
+			_G.JewRobbed = false
+		end
+		for i,v in pairs(workspace.Museum.Roof.Hole:GetChildren()) do
+			if v:GetChildren()[1] then
+				if v.Transparency == 0 then
+				_G.MusRobbed = false
+			end
+		end
+		if not workspace.Trains:GetChildren()[1] then
+			_G.TrainRobbed = false
+		end
+	end
+	end
+end)
+
+
+_G.AutoRobbing = nil
+local notificationcreate = sendn
+function JewBox()
+	for i,v in pairs(workspace.Jewelrys:GetDescendants()) do
+		if v.Name == "Boxes" then
+			local part = v:GetChildren()[math.random(1,table.maxn(v:GetChildren()))]
+			local pos = CFrame.new(part.Position - part.CFrame.LookVector * 2, part.Position)
+			return pos
+		end
+	end
+end
+function JewlRobbing()
+	if _G.AutoRobbing or _G.JewRobbed then return end
+		_G.AutoRobbing = true
+		for i,v in pairs(game.Workspace.Jewelrys:GetDescendants()) do
+			if v:IsA("Decal") then
+				if v.Parent.Name == "Sign" then
+					if v.Transparency > 0.5 then
+					notificationcreate('Jewelry', 'Open', 3)
+					TP(CFrame.new(91.6347504, 20.2128963, 1302.44189, 0.164838046, 0.0733769536, -0.983587563, 0.0025376468, 0.997194052, 0.0748172998, 0.986317396, -0.0148287192, 0.164189309))
+					wait(2)
+					for count = 1, 4 do
+						TP(JewBox())
+						wait(0.5)
+						punch(8)
+						wait(0.5)
+					end
+					wait(2)
+					TP(CFrame.new(1730.87537, 20.45331, -1727.92773, -0.147335127, -0.224534824, 0.963263392, 0.00532062072, 0.973697841, 0.227780879, -0.989072263, 0.0386852883, -0.142265216))
+					TP(CFrame.new(1730.87537, 20.45331, -1727.92773, -0.147335127, -0.224534824, 0.963263392, 0.00532062072, 0.973697841, 0.227780879, -0.989072263, 0.0386852883, -0.142265216))
+					_G.JewRobbed = true
+					_G.AutoRobbing = false
+				elseif v.Transparency == 0 then
+					notificationcreate('Jewelry', 'Closed', 3)
+					TP(CFrame.new(1730.87537, 20.45331, -1727.92773, -0.147335127, -0.224534824, 0.963263392, 0.00532062072, 0.973697841, 0.227780879, -0.989072263, 0.0386852883, -0.142265216))
+					_G.AutoRobbing = false
+				end
+			end
+		end
+	end
+end
+local function GetMoneyCapacity(a)local b=tostring(a)or a.Text;local c=b:sub(4,10)local d=c:gsub(",","")local e=tonumber(d)return e end
+function getNumber(pretty)
+	local lol = ''
+	for i = 1, pretty:len() do
+		local char = pretty:sub(i, i)
+		if char:match('%d') then
+			lol = lol .. char
+		end
+	end
+	return tonumber(lol)
+end
+function BankRobing()
+	if _G.AutoRobbing or _G.BankRobbed then return end
+	_G.AutoRobbing = true
+	for i,v in pairs(game.Workspace.Banks:GetDescendants()) do
+		if v:IsA("Decal") then
+			if v.Parent.Name == "Sign" then
+				if v.Transparency > 0.5 then
+					game:GetService("Players").LocalPlayer.PlayerGui.MainGui.CollectMoney.Money.Text = ""
+					notificationcreate('Bank', 'Open', 3)
+					TP(CFrame.new(30.8057957, 20.307003, 854.226563, -0.00389732886, 0.172487527, -0.98500371, -0.00170719274, 0.985008895, 0.172495201, 0.999990761, 0.00235385355, -0.00354445633))
+					for i,v in pairs(game:GetService("Workspace").Banks:GetDescendants()) do
+						if v:IsA("Part") then
+							if v.Name == "TriggerDoor" then
+								TP(v.Parent.Begin.CFrame + Vector3.new(0,5,0))
+								wait(1)
+								TP(v.CFrame + Vector3.new(0,5,0))
+							end
+						end
+					end
+					wait(2)
+					for i,v in pairs(game:GetService("Workspace").Banks:GetDescendants()) do
+						if v:IsA("Part") then
+							if v.Name == "Money" then
+								TP(v.CFrame + Vector3.new(0,5,0))
+							end
+						end
+					end
+					wait(5)
+					repeat wait(0.5)
+					until getNumber(game:GetService("Players").LocalPlayer.PlayerGui.MainGui.CollectMoney.Money.Text) == GetMoneyCapacity(game:GetService("Players").LocalPlayer.PlayerGui.MainGui.CollectMoney.Maximum.Text)
+					TP(CFrame.new(1761.20618, 52.1366386, -1790.52783, -0.608304322, 0.063044101, -0.791196227, 0.018261876, 0.997688293, 0.0654573366, 0.793493927, 0.0253692511, -0.608049333))
+					wait(2)
+					TP(CFrame.new(1730.87537, 20.45331, -1727.92773, -0.147335127, -0.224534824, 0.963263392, 0.00532062072, 0.973697841, 0.227780879, -0.989072263, 0.0386852883, -0.142265216))
+					TP(CFrame.new(1730.87537, 20.45331, -1727.92773, -0.147335127, -0.224534824, 0.963263392, 0.00532062072, 0.973697841, 0.227780879, -0.989072263, 0.0386852883, -0.142265216))
+					_G.BankRobbed = true
+					_G.AutoRobbing = false
+				elseif v.Transparency == 0 then
+					notificationcreate('Bank', 'Closed', 3)
+					TP(CFrame.new(1730.87537, 20.45331, -1727.92773, -0.147335127, -0.224534824, 0.963263392, 0.00532062072, 0.973697841, 0.227780879, -0.989072263, 0.0386852883, -0.142265216))
+					_G.AutoRobbing = false
+				end
+			end
+		end
+	end
+end
+function checkmuseum()
+	for i,v in pairs(workspace.Museum.Roof.Hole:GetChildren()) do
+		if v:GetChildren()[1] then
+			if v.Transparency == 0 then
+				return false
+			else
+				return true
+			end
+		end
+	end
+end
+function robmuseum()
+	if _G.AutoRobbing or _G.MusRobbed then return end
+	_G.AutoRobbing = true
+	if not checkmuseum() then
+		for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+			if v.Name == "Place Dynamite" and tostring(v.Tag) ~= "BankDoor" and v.Enabled then
+				v:Callback(true)
+			end
+		end
+	end
+	wait(1)
+	if not checkmuseum() then 
+		notificationcreate('Museum', 'Closed', 3)
+		_G.AutoRobbing = false
+		TP(CFrame.new(1730.87537, 20.45331, -1727.92773))
+		return 
+	end
+	for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+		if rawget(v, "Name") then
+			if string.find(v.Name, "Grab") and v.Name ~= "Grab" then
+				if v.Name == "Grab Bone" and v.Enabled then
+					TP(v.Tag.CFrame)
+					wait(1)
+					for count = 1,8 do
+						v:Callback(true)
+					end
+					break
+				end
+			end
+		end
+	end
+	TP(CFrame.new(1730.87537, 20.45331, -1727.92773))  
+	notificationcreate('Museum', 'bypassing', 5)
+	wait(20)
+	TP(CFrame.new(1761.20618, 52.1366386, -1790.52783))
+	wait(2)
+	TP(CFrame.new(1730.87537, 20.45331, -1727.92773))
+	_G.MusRobbed = true
+	_G.AutoRobbing = false
+	return
+end
+function CheckPlane()
+	for i,v in pairs(workspace:GetChildren()) do
+	if v.Name == "Plane" and v.Root then
+		if v.Crates.Crate1["1"].Transparency == 0 then
+				return v.Crates:GetChildren()[math.random(1,table.maxn(v.Crates:GetChildren()))]
+			else
+				return false
+			end
+		end
+	end
+end
+function RobPlane()
+	if _G.AutoRobbing then return end
+	_G.AutoRobbing = true
+	if CheckPlane() then
+		TP(CheckPlane()["1"].CFrame)
+		wait(0.5)
+		for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+			if v.Name == "Inspect Crate" then
+				v:Callback(v, true)
+			end
+		end
+		wait(1)
+		TP(CFrame.new(-451.725647, 78.4250259, 2056.63135))
+		wait(4)
+		TP(CFrame.new(-393.667542, 21.2136765, 2025.38611))
+		wait(1.5)
+		TP(CFrame.new(1730.87537, 20.45331, -1727.92773))
+		_G.PlaneRobbed = true
+		_G.AutoRobbing = false
+	else
+		_G.AutoRobbing = false
+		sendn("Plane", "Closed", 2)
+	end
+end
+function CheckTrainType()
+	for i,v in pairs(workspace.Trains:GetChildren()) do
+		if v.Name == "BoxCar" then
+			return v.Model.Rob
+		elseif v.Name == "SteamEngine" then
+			return "Passenger"
+		end
+	end
+end
+_G.disabletrain = true
+function RobTrain()
+	if _G.AutoRobbing or _G.TrainRobbed then return end
+	_G.AutoRobbing = true
+	if CheckTrainType() then
+		if tostring(CheckTrainType()) == "Passenger" then
+			for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+				if v.Name == "Grab briefcase" then
+					v:Callback(true)
+					wait(1)
+				end
+			 end
+			 TP(CFrame.new(1761.20618, 52.1366386, -1790.52783))
+			 wait(2)
+			 TP(CFrame.new(1730.87537, 20.45331, -1727.92773))
+			 _G.TrainRobbed = true
+			 _G.AutoRobbing = false
+		else
+			if _G.disabletrain then 
+				_G.AutoRobbing = false
+				return 
+			end
+			game:GetService("Players").LocalPlayer.PlayerGui.MainGui.CollectMoney.Money.Text = ""
+			for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+				if v.Name == "Open Door" or v.Name == "Breach Vault" then
+					v:Callback(true)
+				end
+			end
+			repeat wait()
+				TP(CheckTrainType().Gold.CFrame + Vector3.new(0,0.1,0))
+			until getNumber(game:GetService("Players").LocalPlayer.PlayerGui.MainGui.CollectMoney.Money.Text) == GetMoneyCapacity(game:GetService("Players").LocalPlayer.PlayerGui.MainGui.CollectMoney.Maximum.Text)
+			wait()
+			TP(CFrame.new(1730.87537, 20.45331, -1727.92773))
+			wait()
+			_G.TrainRobbed = true
+			_G.AutoRobbing = false
+		end
+	else
+		sendn("Train", "Closed", 2)
+		_G.AutoRobbing = false
+		return false
+	end
+end
+farming:Toggle("Auto Rob", function(arg)
+	_G.autorobcheck = arg
+end)
+
+local function equip(name)
+	local thing
+	for i,v in pairs(getgc(true)) do
+		if type(v) == "table" and rawget(v, 'i') and rawget(v, 'Frame') and rawget(v, 'Name') then
+			if v.Name == name then
+				thing = v
+			end
+		end
+	end
+	require(game:GetService("ReplicatedStorage").Game.ItemSystem.ItemSystem).Equip(game:GetService("Players").LocalPlayer, thing)
+	return
+end
+local arresta = getupvalue(PoliceFunction,1,true)
+local arrest = getupvalue(arresta,7,true)
+farming:Button("Arrest All", function()
+	for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+		if not table.find(whitelisted, v.Name) then
+			if v.Team == game.Teams.Criminal then
+				if v.Character:FindFirstChild('InVehicle') then
+					Remote:FireServer(Hashes["KickVehicle"], v.Name)
+				end
+				if not v.Character:FindFirstChild("Handcuffs") then
+					equip("Handcuffs")
+					TP(v.Character.HumanoidRootPart.CFrame);
+					wait(0.1)
+					arrest(v)
+					arrest(v)
+					arrest(v)
+					TP(v.Character.HumanoidRootPart.CFrame);
+					wait(0.1)
+					arrest(v)
+					arrest(v)
+					arrest(v)
+					TP(v.Character.HumanoidRootPart.CFrame);
+					wait(0.1)
+					arrest(v)
+					arrest(v)
+					arrest(v)
+					TP(v.Character.HumanoidRootPart.CFrame);
+					wait(0.1)
+					arrest(v)
+					arrest(v)
+					arrest(v)
+					TP(v.Character.HumanoidRootPart.CFrame);
+					wait(1)
+				end
+			end
+		end
+	end
+end)
+local funtab = library:CreateSection("Fun")
+local Nuke = (function()
+	for i,v in pairs(getgc()) do
+		if type(v) == "function" and getfenv(v).script == game:GetService("ReplicatedStorage").Game.NukeControl then
+			local con = getconstants(v)
+			if table.find(con, "Nuke") and table.find(con, "Shockwave") then
+				return v
+			end
+		end
+	end
+end)()
+funtab:Toggle("Send Nukes (rip my nigga kim)", function(arg)
+	_G.SNt = arg
+end)
+game:GetService("Players").LocalPlayer:GetMouse().Button1Down:Connect(function()
+	if _G.SNt then
+		require(game:GetService("ReplicatedStorage").Game.Notification).new({
+			Text = "Nuke is incoming! (client sided)",
+			Duration = 1.5
+		})
+		local bruh = game:GetService("Players").LocalPlayer:GetMouse().Hit.p
+		Nuke({
+			Nuke = {
+				Origin = Vector3.new(0,0,0),
+				Speed = 650,
+				Duration = 10,
+				Target = bruh,
+				TimeDilation = 1.5
+			},
+			Shockwave = {
+				Duration = 20,
+				MaxRadius = 100
+			}
+		})
+	end
+end)
+wait(0.1)
+local playSound = (function()
+	for i, v in pairs(getgc(true)) do
+		if typeof(v) == "function" and islclosure(v) and not is_synapse_function(v) then
+			for i2, v2 in pairs(getconstants(v)) do
+				if tostring(v2) == "Play" then
+					for i3,v3 in pairs(getconstants(v)) do
+						if tostring(v3) == "Source" then
+							for i4,v4 in pairs(getconstants(v)) do
+								if tostring(v4) == "FireServer" then
+									return v
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end)()
+funtab:Box("Play Fireworks (Client Sided)", function(callback)
+	if tonumber(callback) then
+		PlayFirework(tonumber(callback))
+	end
+end)
+local give = (function()
+	for i, v in pairs(getgc()) do
+		if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+			local con = getconstants(v)
+			if table.find(con, "PlusCash") then
+				return v
+			end
+		end
+	end
+end)()
+funtab:Box("Give Money", function(callback)
+	if tonumber(callback) then
+		give(tonumber(callback), "bruh this is fake u nigga")
+	else
+		return
+	end
+end)
+funtab:Toggle("Annoy Server", function(arg)
+	_G.ASt = arg
+end)
+
+local hatclick = (function()
+	for i,v in pairs(game:GetService("Workspace").Givers:GetChildren()) do
+		if v.Name == 'Station' then
+			if v:FindFirstChild("Item").Value == 'HatPolice' then
+				return v.ClickDetector
+			end
+		end
+	end
+end)()
+function firehatoff()
+	fireclickdetector(hatclick)
+	if game:GetService('Players').LocalPlayer.Character:FindFirstChild('HatPolice') then 
+		game:GetService('Players').LocalPlayer.Character.HatPolice.Parent = workspace
+	else
+		return
+	end
+end
+funtab:Toggle("Spam Hats", function(arg)
+	_G.SHt = arg
+end)
+
+do -- network ownership bypass
+	local FalseMaxSims = {math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360),math.random(1000,1360)}
+	local FalseSims = {math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95),math.random(8.82,22.95)}
+	local FalseSelfMaxSim = math.random(1000,1360)
+	local FalseSelfSim = math.random(8.82,22.95)
+	local FalseNetworkAccess = coroutine.create(function()
+	while true do game:GetService("RunService").RenderStepped:Wait()
+	local TBL = game:GetService("Players"):GetChildren() 
+	for _ = 1,#TBL do local Players = TBL[_]
+	if Players ~= game:GetService("Players").LocalPlayer then
+	Players.MaximumSimulationRadius = FalseMaxSims[_] Players.SimulationRadius = FalseSims[_] end end
+	game:GetService("Players").LocalPlayer.MaximumSimulationRadius = FalseSelfMaxSim
+	game:GetService("Players").LocalPlayer.SimulationRadius = FalseSelfSim end end)
+	coroutine.resume(FalseNetworkAccess)
+	settings().Physics.AllowSleep = false
+	local NetworkAccess = coroutine.create(function()
+	while true do game:GetService("RunService").Stepped:Wait()
+	local TBL = game:GetService("Players"):GetChildren() 
+	for _ = 1,#TBL do local Players = TBL[_]
+	if Players ~= game:GetService("Players").LocalPlayer then
+	Players.MaximumSimulationRadius = 0.1 Players.SimulationRadius = 0 end end
+	game:GetService("Players").LocalPlayer.MaximumSimulationRadius = math.pow(math.huge,math.huge)
+	game:GetService("Players").LocalPlayer.SimulationRadius = math.huge*math.huge end end)
+	coroutine.resume(NetworkAccess)
+end
+wait(0.2)
+funtab:Button("Volcano Eruption", function()
+	firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, workspace.LavaFun.Lavatouch, 0)
+	wait()
+	firetouchinterest(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart, workspace.LavaFun.Lavatouch, 1)
+end)
+funtab:Button("Teleport All Unanchored Part to You", function()
+	for index, part in pairs(workspace:GetDescendants()) do
+		if part:IsA("Part") and part.Anchored == false and part:IsDescendantOf(game:GetService("Players").LocalPlayer.Character) == false then
+			part.CFrame = CFrame.new(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(math.random(10,50),50,math.random(10,50)))
+		end
+	end
+end)
+funtab:Button("Teleport All Vehicle to You", function()
+	for index, part in pairs(workspace.Vehicles:GetDescendants()) do
+		if part:IsA("Part") and part.Anchored == false and part:IsDescendantOf(game:GetService("Players").LocalPlayer.Character) == false then
+			part.CFrame = CFrame.new(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(math.random(10,50),50,math.random(10,50)))
+		end
+	end
+end)
+funtab:Button("Cat Tornado (Punch Player)", function()
+	local plr = game:GetService("Players").LocalPlayer
+local mouse = plr:GetMouse()
+local dum
+function ea(v)
+if v.Anchored == true then
+	dum = true
+end
+end
+local unanchored = {}
+local poople = {}
+local mom = nil
+local dist = 4000
+local ree = {}
+function find()
+ree = {}
+unanchored = {}
+mom = nil
+dist = 4000
+for _, v in pairs(workspace.Vehicles:GetChildren()) do
+	if v.PrimaryPart then
+		dum = false
+		ea(v.PrimaryPart)
+		for _, ve in pairs(v.PrimaryPart:GetConnectedParts(true)) do
+			ea(ve)
+		end
+		if dum == false then
+			table.insert(unanchored, v.PrimaryPart)
+		end
+	end
+end
+for _, v in pairs(unanchored) do
+	for _, va in pairs(game:GetService("Players"):GetPlayers()) do
+		if va ~= game:GetService("Players").LocalPlayer and va.Character then
+			if va:DistanceFromCharacter(v.Position) > 100 and plr:DistanceFromCharacter(v.Position) < dist then
+				table.insert(ree, v)
+			end
+		end
+	end
+end
+end
+mouse.KeyDown:connect(
+	function(k)
+		if k == "f" and mouse.Target then
+			find()
+			local hrp = mouse.Target.Parent:FindFirstChild("HumanoidRootPart")
+			if hrp == nil and mouse.Target.Anchored == false then
+				hrp = mouse.Target
+			end
+			if hrp then
+				for _, v in pairs(ree) do
+					local bv = Instance.new("BodyAngularVelocity", v)
+					bv.AngularVelocity = Vector3.new(100, 100, 100)
+					bv.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+					local rp = Instance.new("RocketPropulsion", v)
+					rp.MaxThrust = 9e6
+					rp.MaxSpeed = 1337
+					rp.Target = hrp
+					rp:Fire()
+					for _, vv in pairs(v.Parent:GetDescendants()) do
+						if vv:IsA("BasePart") then
+							vv.CanCollide = false
+						end
+					end
+					spawn(function()
+						wait(20)
+						v.Velocity = Vector3.new(0, 0, 0)
+						rp:Destroy()
+					end)
+				end
+			end
+		end
+	end)
+end)
+local sDrop = {}
+for i,v in pairs(require(game:GetService("ReplicatedStorage").Resource.Settings).Sounds) do
+	table.insert(sDrop, i)
+end
+funtab:Dropdown("Play Sound", sDrop, function(callback)
+	playSound(tostring(callback), {
+		Source = game:GetService("Players").LocalPlayer.Character, 
+		Volume = math.huge, 
+		Multi = true,
+		MaxTime = 10
+	}, false);
+end)
+local setting = library:CreateSection("Settings")
+setting:Box("Whitelist Player", function(callback)
+	for i,v in next, game:GetService("Players"):GetPlayers() do
+		if string.find(string.lower(v.Name), string.lower(tostring(callback))) and not table.find(whitelisted, v.Name) then
+			table.insert(whitelisted, v.Name)
+		end
+	end
+end)
+setting:Box("UnWhitelist Player", function(callback)
+	for i,v in next, game:GetService("Players"):GetPlayers() do
+		if string.find(string.lower(v.Name), string.lower(tostring(callback))) then
+			if table.find(whitelisted, v.Name) then
+				table.remove(whitelisted, table.find(whitelisted, v.Name))
+			end
+		end
+	end
+end)
+setting:Button("Join Discord", function()
+	Site = "https://discord.gg/HEfYrKQ"
+	site = string.gsub(string.gsub(Site,"/","\\"),":\\\\","://").."?www.roblox.com"
+	game.GuiService:OpenBrowserWindow(site)
+end)
+setting:Button("Rejoin To Same Server", function()
+	game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
+end)
+setting:TGUI()
+setting:Label("Credits:")
+setting:Label("linsonder6 for all the functions")
+setting:Label("Masterzz for autorob")
+setting:Label("Showerhead for idk")
+local mt = getrawmetatable(game)
+setreadonly(mt, false)
+local old = mt.__newindex
+
+mt.__newindex = newcclosure(function(a, b, c)
+	if b == "WalkSpeed" then
+		if tonumber(_G.WalkSpeed) == 16 then
+			return old(a, b, c)
+		end
+		if tonumber(_G.WalkSpeed) > 150 then
+			Remote:FireServer(Hashes["GetOutCar"])
+		end
+		return old(a, b, _G.WalkSpeed)
+	end
+	return old(a, b, c)
+end)
+local nigga = 0
+local counter = 0
+game:GetService("RunService").Stepped:Connect(function()
+		if _G.NWt then
+			for i,v in pairs(require(game:GetService("ReplicatedStorage").Module.UI).CircleAction.Specs) do
+				v.Timed = false;
+			end
+		end
+		if _G.AEAt then
+			for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+				if not table.find(whitelisted, v.Name) then
+					Remote:FireServer(Hashes["KickVehicle"], v.Name)
+				end
+			end
+		end
+		if _G.GMt then
+			if game:GetService('Players').LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
+				Remote:FireServer(Hashes["TouchTrigger"], "Donut")
+				Remote:FireServer(Hashes["EatDonut"])
+			end
+		end
+		if _G.AFOt then
+			GuiFunc({Name = "Flip"}, true)
+		end
+
+		if _G.RCt then
+			for i,v in pairs(workspace.Vehicles:GetChildren()) do
+				if v:FindFirstChild('Seat') then
+					if v.Seat:WaitForChild("PlayerName").Value == game:GetService('Players').LocalPlayer.Name then
+						if v.Model:FindFirstChild("SecondBody") then
+							v.Model.SecondBody.Color = (Color3.fromHSV(zigzag(nigga),1,1))
+						end
+						v.Model.Body.Color = (Color3.fromHSV(zigzag(nigga),1,1))
+						v.Model.Windows.Color = (Color3.fromHSV(zigzag(nigga),1,1))
+						nigga = nigga + 0.01
+					end
+				end
+			end
+		end
+		if _G.RNt then
+			for i,v in pairs(workspace.Vehicles:GetChildren()) do
+				if v:FindFirstChild('Seat') then
+					if v.Seat:WaitForChild("PlayerName").Value == game:GetService('Players').LocalPlayer.Name then
+						for a,b in pairs(v.Model:GetChildren()) do
+							if b.Name == "Nitrous" then
+								b.Fire.Color = ColorSequence.new(Color3.fromHSV(zigzag(counter),1,1))
+								b.Smoke.Color = ColorSequence.new(Color3.fromHSV(zigzag(counter),1,1))
+								counter = counter + 0.01
+							end
+						end
+					end
+				end
+			end
+		end
+		if _G.TAt then
+			for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+				if not table.find(whitelisted, v.Name) then
+					if v.Character then
+						Remote:FireServer(Hashes['Taze'], v.Name, v.Character.HumanoidRootPart, v.Character.HumanoidRootPart.Position);
+					end
+				end;
+			end;
+		end;
+		if _G.TAut then
+			for i,v in next, game:GetService('Players'):GetPlayers() do
+				if game:GetService("Players").LocalPlayer ~= v then
+					if (game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 50 then
+						if not table.find(whitelisted, v.Name) then
+							Remote:FireServer(Hashes['Taze'], game:GetService('Players')[tostring(v)].Name, game:GetService('Players')[tostring(v)].Character.HumanoidRootPart, game:GetService('Players')[tostring(v)].Character.HumanoidRootPart.Position);
+						end
+					end
+				end
+			end
+		end
+		if _G.ASt then
+			playSound("FireworkBang", {
+				Source = game:GetService("Players").LocalPlayer.Character, 
+				Volume = math.huge, 
+				Multi = true,
+			}, false)
+			playSound("Horn", {
+				Pitch = math.huge,
+				Source = game:GetService("Players").LocalPlayer.Character, 
+				Volume = math.huge, 
+				Multi = true,
+				MaxTime = 0.1
+			}, false)
+		end
+		if _G.SHt then
+			firehatoff()
+		end
+end)
+
+spawn(function()
+    while wait(3) do
+		if _G.OADt then
+			pcall(function()
+				for i,v in next, Doors do
+					Opendoor(v)
+				end
+			end)
+		end
+    end
+end)
+spawn(function()
+	while wait() do
+		if _G.autorobcheck then
+			BankRobing()
+			JewlRobbing()
+			robmuseum()
+			RobPlane()
+			RobTrain()
+			for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+				if v.Name == "Rob" then
+					v:Callback(v, true)
+				end
+			end
+			wait(14)
+		end
+	end
+end)
+spawn(function()
+	while wait(1) do
+		if _G.AAt then
+			repeat wait()
+			until game:GetService("Players").LocalPlayer.Character:FindFirstChild("Handcuffs")
+			BreakOut(game:GetService("Players").LocalPlayer)
+		end
+	end
+end)
+require(game:GetService("ReplicatedStorage").Game.Notification).new({
+    Text = "Thanks for using Tesla!",
+    Duration = 2
+})
+library:Ready();
+PlayFirework(10);
